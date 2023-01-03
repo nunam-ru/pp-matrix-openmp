@@ -15,7 +15,7 @@ float t1, t2, time_start, time_final;
 
 int main(int argc, char** argv) {
     int i, j, k;
-
+    //Find max number of threads
     int threads = omp_get_num_procs();
     printf("Max threads found: %d\n", threads);
 
@@ -49,24 +49,24 @@ int main(int argc, char** argv) {
 //      }
 //        printf("\n");
 //  }
-
+    //Start counting
     double start = omp_get_wtime();
     printf("Counting...\n");
 	for (int i = 1; i <= threads; i++) {
-        t1 = omp_get_wtime();
+	t1 = omp_get_wtime();
 		omp_set_num_threads(i);
 
-        #pragma omp parallel for private(i,j,k)
-            for (i = 0; i < N; i++) {
-                for (j = 0; j < N; j++) {
-                    C[i][j] = 0;
-                    for (k = 0; k < N; k++) {
-                        C[i][j] += A[i][k] * B[k][j];
-                    }
-                }
-        }
+	#pragma omp parallel for private(i,j,k)
+	    for (i = 0; i < N; i++) {
+		for (j = 0; j < N; j++) {
+		    C[i][j] = 0;
+		    for (k = 0; k < N; k++) {
+			C[i][j] += A[i][k] * B[k][j];
+		    }
+		}
+	}
 		t2 = omp_get_wtime();
-        printf("Threads: %d, time: % .6f\n", i, t2 - t1);
+	printf("Threads: %d, time: % .6f\n", i, t2 - t1);
 	}
 
 //  Print C
